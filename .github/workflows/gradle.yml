@@ -1,0 +1,49 @@
+name: Build with Gradle using Zulu JDK 21 and upload artifacts
+
+# 触发条件：推送代码或拉取请求时触发构建，仅针对 master 分支
+on:
+  push:
+    branches:
+      - master  # 触发条件为master分支
+  pull_request:
+    branches:
+      - master
+
+# 定义构建任务
+jobs:
+  build:
+    runs-on: ubuntu-latest  # 使用 Ubuntu 作为运行环境
+    
+    steps:
+      # Step 1: 检出项目代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Step 2: 设置 Zulu JDK 21
+      - name: Set up Zulu JDK 21
+        uses: actions/setup-java@v3
+        with:
+          java-version: '21'  # 使用 Java 21
+          distribution: 'zulu'  # 设置 Zulu 作为 JDK 发行版
+
+      # Step 3: 缓存 Gradle 依赖（可选）
+      - name: Cache Gradle packages
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Step 4: 运行 Gradle 构建，不运行测试
+      - name: Build with Gradle (no tests)
+        run: ./gradlew build -x test
+
+      # Step 5: 上传构建产物
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifacts  # 构建产物名称
+          path: build/libs/*.jar  # 上传 build/libs 下的 JAR 文件
