@@ -20,8 +20,7 @@ public class RenderUtils {
 
 
 
-    public void drawBox(Vec3d pos, float width, float height, Vec3d cameraPos, Vector3f boxColor, float alpha) {
-
+    public void drawBox(Vec3d pos, float width, float height, Vec3d cameraPos, Vector3f boxColor, float alpha, boolean optimize) {
 
         // 计算盒子的8个顶点位置
         float x0 = (float) (pos.x - width / 2);
@@ -41,21 +40,44 @@ public class RenderUtils {
         Vector3f v6 = new Vector3f(x1, y1, z1);  // 右上后
         Vector3f v7 = new Vector3f(x0, y1, z1);  // 左上后
 
-        // 使用简化后的 drawLine 函数绘制边框
-        drawLine(cameraPos, v0, v1, boxColor, alpha); // 前面底边
-        drawLine(cameraPos, v1, v2, boxColor, alpha); // 前面右边
-        drawLine(cameraPos, v2, v3, boxColor, alpha); // 前面顶边
-        drawLine(cameraPos, v3, v0, boxColor, alpha); // 前面左边
+        if (optimize){
+            startRender();
 
-        drawLine(cameraPos, v4, v5, boxColor, alpha); // 后面底边
-        drawLine(cameraPos, v5, v6, boxColor, alpha); // 后面右边
-        drawLine(cameraPos, v6, v7, boxColor, alpha); // 后面顶边
-        drawLine(cameraPos, v7, v4, boxColor, alpha); // 后面左边
+            BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+            drawLine(cameraPos, v0, v1, boxColor, alpha, buffer); // 前面底边
+            drawLine(cameraPos, v1, v2, boxColor, alpha, buffer); // 前面右边
+            drawLine(cameraPos, v2, v3, boxColor, alpha, buffer); // 前面顶边
+            drawLine(cameraPos, v3, v0, boxColor, alpha, buffer); // 前面左边
 
-        drawLine(cameraPos, v0, v4, boxColor, alpha); // 连接前后左边
-        drawLine(cameraPos, v1, v5, boxColor, alpha); // 连接前后右边
-        drawLine(cameraPos, v2, v6, boxColor, alpha); // 连接前后右边
-        drawLine(cameraPos, v3, v7, boxColor, alpha); // 连接前后左边
+            drawLine(cameraPos, v4, v5, boxColor, alpha, buffer); // 后面底边
+            drawLine(cameraPos, v5, v6, boxColor, alpha, buffer); // 后面右边
+            drawLine(cameraPos, v6, v7, boxColor, alpha, buffer); // 后面顶边
+            drawLine(cameraPos, v7, v4, boxColor, alpha, buffer); // 后面左边
+
+            drawLine(cameraPos, v0, v4, boxColor, alpha, buffer); // 连接前后左边
+            drawLine(cameraPos, v1, v5, boxColor, alpha, buffer); // 连接前后右边
+            drawLine(cameraPos, v2, v6, boxColor, alpha, buffer); // 连接前后右边
+            drawLine(cameraPos, v3, v7, boxColor, alpha, buffer); // 连接前后左边
+
+            endRender(buffer);
+
+        } else {
+            // 使用简化后的 drawLine 函数绘制边框
+            drawLine(cameraPos, v0, v1, boxColor, alpha); // 前面底边
+            drawLine(cameraPos, v1, v2, boxColor, alpha); // 前面右边
+            drawLine(cameraPos, v2, v3, boxColor, alpha); // 前面顶边
+            drawLine(cameraPos, v3, v0, boxColor, alpha); // 前面左边
+
+            drawLine(cameraPos, v4, v5, boxColor, alpha); // 后面底边
+            drawLine(cameraPos, v5, v6, boxColor, alpha); // 后面右边
+            drawLine(cameraPos, v6, v7, boxColor, alpha); // 后面顶边
+            drawLine(cameraPos, v7, v4, boxColor, alpha); // 后面左边
+
+            drawLine(cameraPos, v0, v4, boxColor, alpha); // 连接前后左边
+            drawLine(cameraPos, v1, v5, boxColor, alpha); // 连接前后右边
+            drawLine(cameraPos, v2, v6, boxColor, alpha); // 连接前后右边
+            drawLine(cameraPos, v3, v7, boxColor, alpha); // 连接前后左边
+        }
 
     }
 
@@ -84,6 +106,28 @@ public class RenderUtils {
 
 
     }
+
+    public void drawLine(Vec3d cameraPos, Vector3f vertex1, Vector3f vertex2, Vector3f lineColor, float alpha, BufferBuilder buffer) {
+
+
+        // 将顶点相对于相机位置进行平移，使其正确显示在相机视角下
+        float x1 = vertex1.x - (float) cameraPos.x;
+        float y1 = vertex1.y - (float) cameraPos.y;
+        float z1 = vertex1.z - (float) cameraPos.z;
+
+        float x2 = vertex2.x - (float) cameraPos.x;
+        float y2 = vertex2.y - (float) cameraPos.y;
+        float z2 = vertex2.z - (float) cameraPos.z;
+
+        // 向缓冲区中添加顶点和颜色
+        buffer.vertex(x1, y1, z1).color(lineColor.x, lineColor.y, lineColor.z, alpha);
+        buffer.vertex(x2, y2, z2).color(lineColor.x, lineColor.y, lineColor.z, alpha);
+
+
+    }
+
+
+
 
 
     public void startRender(){
