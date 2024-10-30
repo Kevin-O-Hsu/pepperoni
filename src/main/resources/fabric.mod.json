@@ -12,6 +12,9 @@
   "entrypoints": {
     "client": [
       "mc.veryminecraft.top.pepperoni.client.PepperoniClient"
+    ],
+    "main": [
+      "mc.veryminecraft.top.pepperoni.Pepperoni"
     ]
   },
   "depends": {

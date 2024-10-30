@@ -1,6 +1,7 @@
 package mc.veryminecraft.top.pepperoni.client.utils;
 
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
+import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Vec3d;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -10,7 +11,6 @@ import org.joml.Vector3f;
 public class RenderUtils {
 
     private final Tessellator tessellator;
-    public BufferBuilder buffer;
 
 
     public RenderUtils(WorldRenderContext ctx){
@@ -21,8 +21,6 @@ public class RenderUtils {
 
 
     public void drawBox(Vec3d pos, float width, float height, Vec3d cameraPos, Vector3f boxColor, float alpha) {
-        this.buffer = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
-        startRender();
 
 
         // 计算盒子的8个顶点位置
@@ -59,14 +57,15 @@ public class RenderUtils {
         drawLine(cameraPos, v2, v6, boxColor, alpha); // 连接前后右边
         drawLine(cameraPos, v3, v7, boxColor, alpha); // 连接前后左边
 
-
-        endRender(this.buffer);
     }
 
 
 
 
     public void drawLine(Vec3d cameraPos, Vector3f vertex1, Vector3f vertex2, Vector3f lineColor, float alpha) {
+
+        BufferBuilder buffer = tessellator.begin(VertexFormat.DrawMode.DEBUG_LINES, VertexFormats.POSITION_COLOR);
+        startRender();
 
         // 将顶点相对于相机位置进行平移，使其正确显示在相机视角下
         float x1 = vertex1.x - (float) cameraPos.x;
@@ -78,14 +77,18 @@ public class RenderUtils {
         float z2 = vertex2.z - (float) cameraPos.z;
 
         // 向缓冲区中添加顶点和颜色
-        this.buffer.vertex(x1, y1, z1).color(lineColor.x, lineColor.y, lineColor.z, alpha);
-        this.buffer.vertex(x2, y2, z2).color(lineColor.x, lineColor.y, lineColor.z, alpha);
+        buffer.vertex(x1, y1, z1).color(lineColor.x, lineColor.y, lineColor.z, alpha);
+        buffer.vertex(x2, y2, z2).color(lineColor.x, lineColor.y, lineColor.z, alpha);
 
+        endRender(buffer);
 
 
     }
 
+
     public void startRender(){
+        RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
+        // RenderSystem.setShaderColor(1,1,1,0);
         RenderSystem.disableDepthTest();  // 禁用深度测试，避免透明物体被遮挡
         RenderSystem.enableBlend();       // 启用透明度混合
         RenderSystem.defaultBlendFunc();  // 设置默认混合函数
