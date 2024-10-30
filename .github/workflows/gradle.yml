@@ -14,13 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Step 1: 检出项目代码
+      # Step 1: 检出项目代码，升级到 actions/checkout@v4
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
-      # Step 2: 设置 Zulu JDK 21
+      # Step 2: 设置 Zulu JDK 21，升级到 actions/setup-java@v4
       - name: Set up Zulu JDK 21
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '21'
           distribution: 'zulu'
