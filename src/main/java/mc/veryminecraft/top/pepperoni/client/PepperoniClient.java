@@ -56,7 +56,7 @@ public class PepperoniClient implements ClientModInitializer {
                 float alpha = Math.max(0.1F, Math.min(1.0F, (float) (1 - (distance / 96D))));
 
 
-                renderUtils.drawBox(hostilePos, _hostile.getWidth(), _hostile.getHeight(), cameraPos, hostileBoxColor, alpha);
+                renderUtils.drawBox(hostilePos, _hostile.getWidth(), _hostile.getHeight(), cameraPos, hostileBoxColor, alpha, true);
             }
         }
 
@@ -75,7 +75,7 @@ public class PepperoniClient implements ClientModInitializer {
                 double distance = mc.player.getPos().distanceTo(playerPos);
                 float alpha = Math.max(0.1F, Math.min(1.0F, (float) (1 - (distance / 96D))));
 
-                renderUtils.drawBox(playerPos, _player.getWidth(), _player.getHeight(), cameraPos, playerBoxColor, alpha);
+                renderUtils.drawBox(playerPos, _player.getWidth(), _player.getHeight(), cameraPos, playerBoxColor, alpha, true);
             }
         }
 
