@@ -49,4 +49,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: pepperoni-1.21.3
-          path: build/libs/*.jar
+          path: build/libs/pepperoni-1.0.jar
