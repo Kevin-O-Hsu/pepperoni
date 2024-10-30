@@ -3,13 +3,11 @@
   "id": "pepperoni",
   "version": "${version}",
   "name": "pepperoni",
-  "description": "A useful "
-  hack
-  " mod for Minecraft Survival",
+  "description": "A useful \"hack\" mod for Minecraft Survival",
   "authors": [],
   "contact": {},
   "license": "GPL-3.0",
-  "icon": "assets/pepperoni/icon.png",
+  "icon": "icon.png",
   "environment": "client",
   "entrypoints": {
     "client": [
