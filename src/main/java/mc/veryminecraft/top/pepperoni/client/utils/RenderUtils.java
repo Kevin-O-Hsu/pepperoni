@@ -132,7 +132,6 @@ public class RenderUtils {
 
     public void startRender(){
         RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
-        // RenderSystem.setShaderColor(1,1,1,0);
         RenderSystem.disableDepthTest();  // 禁用深度测试，避免透明物体被遮挡
         RenderSystem.enableBlend();       // 启用透明度混合
         RenderSystem.defaultBlendFunc();  // 设置默认混合函数

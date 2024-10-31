@@ -1,6 +1,7 @@
 package mc.veryminecraft.top.pepperoni.client;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +13,10 @@ import net.minecraft.client.network.AbstractClientPlayerEntity;
 import org.joml.Vector3f;
 import mc.veryminecraft.top.pepperoni.client.utils.RenderUtils;
 import mc.veryminecraft.top.pepperoni.client.utils.MobLocator;
+import mc.veryminecraft.top.pepperoni.client.gui.GuiScreen;
+
+
+
 
 public class PepperoniClient implements ClientModInitializer {
 
@@ -24,7 +29,11 @@ public class PepperoniClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         WorldRenderEvents.AFTER_TRANSLUCENT.register(this::run);
-
+        ClientTickEvents.END_CLIENT_TICK.register(client -> {
+            if (GuiScreen.toggleScreenKey.wasPressed()) {
+                MinecraftClient.getInstance().setScreen(new GuiScreen()); // 打开 Screen
+            }
+        });
     }
 
 
