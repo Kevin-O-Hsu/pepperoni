@@ -9,64 +9,49 @@ import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
 
+import java.util.HashMap;
 
 public class GuiScreen extends Screen {
 
-    public static final KeyBinding toggleScreenKey = new KeyBinding(
-            "key.veryminecraft.opensc",
-            InputUtil.Type.KEYSYM,
-            GLFW.GLFW_KEY_PERIOD,
-            "category.veryminecraft"
-    );
+    private final ResultCallback callback;
+    public static final KeyBinding toggleScreenKey = new KeyBinding("key.veryminecraft.opensc", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_PERIOD, "category.veryminecraft");
+    private final HashMap<String, Boolean> hackStatus;
 
+    public interface ResultCallback {
+        void onResult(HashMap<String, Boolean> result);
+    }
 
-
-
-
-    public GuiScreen() {
+    public GuiScreen(ResultCallback callback, HashMap<String, Boolean> hackStatus) {
         super(Text.of("GuiScreen"));
-        int screenWidth = MinecraftClient.getInstance().getWindow().getScaledWidth();
-        int screenHeight = MinecraftClient.getInstance().getWindow().getScaledHeight();
+        this.callback = callback;
+        this.hackStatus = hackStatus;
 
-        // 使用屏幕的实际宽度和高度来计算按钮的位置
-        ButtonWidget buttonWidget = ButtonWidget.builder(Text.of("Click Me"), (btn) -> {
-                    onButtonClick(); // 触发自定义的点击函数
-                }).dimensions((screenWidth - 100) / 2, (screenHeight - 20) / 2, 100, 20) // 居中按钮
-                .build();
-
-        // 添加按钮到屏幕
-        this.addDrawableChild(buttonWidget);
+        addDrawableChild(ButtonWidget.builder(Text.of("Toggle Player ESP"), (btn) -> toggleESP("playerESP")).dimensions(100, 100, 200, 20).build());
+        addDrawableChild(ButtonWidget.builder(Text.of("Toggle Mob ESP"), (btn) -> toggleESP("mobESP")).dimensions(100, 130, 200, 20).build());
     }
 
-    private void onButtonClick() {
-        System.out.println("Button clicked!");
-        // 执行其他逻辑
+    private void toggleESP(String hack) {
+        hackStatus.put(hack, !hackStatus.get(hack)); // 切换状态
     }
-
-
-
-
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        // 使用新的 DrawContext API 设置半透明黑色背景
         context.fill(0, 0, this.width, this.height, 0x88000000);
         super.render(context, mouseX, mouseY, delta);
     }
 
     @Override
     public boolean shouldPause() {
-        return false; // 不暂停游戏
+        return false;
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // 检测按下 . 键时关闭 Screen
         if (keyCode == GLFW.GLFW_KEY_PERIOD) {
-            MinecraftClient.getInstance().setScreen(null); // 关闭当前 Screen
+            callback.onResult(hackStatus); // 传递当前状态
+            MinecraftClient.getInstance().setScreen(null);
             return true;
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
-
 }

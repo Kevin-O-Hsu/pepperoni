@@ -127,9 +127,6 @@ public class RenderUtils {
     }
 
 
-
-
-
     public void startRender(){
         RenderSystem.setShader(ShaderProgramKeys.POSITION_COLOR);
         RenderSystem.disableDepthTest();  // 禁用深度测试，避免透明物体被遮挡

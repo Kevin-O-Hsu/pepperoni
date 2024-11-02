@@ -9,8 +9,9 @@ import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
-
 import java.util.List;
+import java.util.HashMap;
+
 
 
 public class ESP {
@@ -19,14 +20,24 @@ public class ESP {
     private final MinecraftClient mc = MinecraftClient.getInstance();
     private final WorldRenderContext context;
     private final RenderUtils renderUtils;
+    private final HashMap<String, Boolean> hackStatus;
 
-
-    public ESP(WorldRenderContext ctx) {
+    public ESP(WorldRenderContext ctx, HashMap<String, Boolean> hackStatus) {
         this.context = ctx;
         this.renderUtils = new RenderUtils(ctx);
+        this.hackStatus = hackStatus;
     }
 
-    public void playerESP() {
+    public void update() {
+        if (hackStatus.getOrDefault("mobESP", false)) {
+            renderMobESP();
+        }
+        if (hackStatus.getOrDefault("playerESP", false)) {
+            renderPlayerESP();
+        }
+    }
+
+    private void renderMobESP() {
         if (mc.world == null || mc.player == null) return;
         List<HostileEntity> allHostiles = theMobLocator.getNearbyMonsters(mc.world, mc.player, 96F);
         if (!allHostiles.isEmpty()) {
@@ -45,7 +56,7 @@ public class ESP {
         }
     }
 
-    public void mobESP() {
+    private void renderPlayerESP() {
         if (mc.world == null || mc.player == null) return;
         List<AbstractClientPlayerEntity> exceptMePlayers = theMobLocator.getPlayers(mc.world, mc.player);
         if (!exceptMePlayers.isEmpty()) {
@@ -60,8 +71,5 @@ public class ESP {
                 renderUtils.drawBox(playerPos, _player.getWidth(), _player.getHeight(), cameraPos, playerBoxColor, alpha, true);
             }
         }
-
     }
-
-
 }
