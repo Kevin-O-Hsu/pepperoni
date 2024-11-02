@@ -8,8 +8,9 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-
 import java.util.HashMap;
+
+
 
 public class GuiScreen extends Screen {
 

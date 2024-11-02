@@ -24,7 +24,7 @@ public class ESP {
 
     public ESP(WorldRenderContext ctx, HashMap<String, Boolean> hackStatus) {
         this.context = ctx;
-        this.renderUtils = new RenderUtils(ctx);
+        this.renderUtils = new RenderUtils();
         this.hackStatus = hackStatus;
     }
 

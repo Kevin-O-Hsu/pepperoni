@@ -1,6 +1,5 @@
 package mc.veryminecraft.top.pepperoni.client.utils;
 
-import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.*;
 import net.minecraft.util.math.Vec3d;
@@ -13,9 +12,8 @@ public class RenderUtils {
     private final Tessellator tessellator;
 
 
-    public RenderUtils(WorldRenderContext ctx){
+    public RenderUtils(){
         this.tessellator = Tessellator.getInstance();
-
     }
 
 

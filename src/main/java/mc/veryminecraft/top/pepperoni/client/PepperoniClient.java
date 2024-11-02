@@ -7,8 +7,9 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import mc.veryminecraft.top.pepperoni.client.gui.GuiScreen;
 import mc.veryminecraft.top.pepperoni.client.hacks.ESP;
-
 import java.util.HashMap;
+
+
 
 public class PepperoniClient implements ClientModInitializer, GuiScreen.ResultCallback {
 
