@@ -5,89 +5,43 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.math.Vec3d;
-import java.util.List;
-import net.minecraft.client.network.AbstractClientPlayerEntity;
-import org.joml.Vector3f;
-import mc.veryminecraft.top.pepperoni.client.utils.RenderUtils;
-import mc.veryminecraft.top.pepperoni.client.utils.MobLocator;
 import mc.veryminecraft.top.pepperoni.client.gui.GuiScreen;
+import mc.veryminecraft.top.pepperoni.client.hacks.ESP;
+import java.util.HashMap;
 
 
 
+public class PepperoniClient implements ClientModInitializer, GuiScreen.ResultCallback {
 
-public class PepperoniClient implements ClientModInitializer {
-
-    private final MobLocator theMobLocator = new MobLocator();
     private final MinecraftClient mc = MinecraftClient.getInstance();
-    private WorldRenderContext context;
-    private RenderUtils renderUtils;
-
+    private final HashMap<String, Boolean> hackStatus = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
+        // 初始化 hack 状态
+        hackStatus.put("playerESP", false);
+        hackStatus.put("mobESP", false);
+
+        // 注册渲染事件
         WorldRenderEvents.AFTER_TRANSLUCENT.register(this::run);
+
+        // 注册键位事件
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (GuiScreen.toggleScreenKey.wasPressed()) {
-                MinecraftClient.getInstance().setScreen(new GuiScreen()); // 打开 Screen
+                mc.setScreen(new GuiScreen(this, hackStatus)); // 打开 GuiScreen
             }
         });
     }
 
-
     public void run(WorldRenderContext context) {
-
-        this.renderUtils = new RenderUtils(context);
-        this.context = context;
-
-
-        if (mc.world == null || mc.player == null) return;
-
-
-        mobESP();
-        playerESP();
-
+        // 更新 ESP 状态
+        ESP esp = new ESP(context, hackStatus);
+        esp.update();
     }
 
-    public void playerESP() {
-        if (mc.world == null || mc.player == null) return;
-        List<HostileEntity> allHostiles = theMobLocator.getNearbyMonsters(mc.world, mc.player, 96F);
-        if (!allHostiles.isEmpty()) {
-            Vector3f hostileBoxColor = new Vector3f(1F, 0F, 0F);
-            for (HostileEntity _hostile : allHostiles) {
-                Vec3d hostilePos = _hostile.getPos();
-                Vec3d cameraPos = context.camera().getPos();
-
-
-                double distance = mc.player.getPos().distanceTo(hostilePos);
-                float alpha = Math.max(0.1F, Math.min(1.0F, (float) (1 - (distance / 96D))));
-
-
-                renderUtils.drawBox(hostilePos, _hostile.getWidth(), _hostile.getHeight(), cameraPos, hostileBoxColor, alpha, true);
-            }
-        }
-
+    @Override
+    public void onResult(HashMap<String, Boolean> hackStatus) {
+        // 更新 hack 状态
+        this.hackStatus.putAll(hackStatus);
     }
-
-
-    public void mobESP() {
-        if (mc.world == null || mc.player == null) return;
-        List<AbstractClientPlayerEntity> exceptMePlayers = theMobLocator.getPlayers(mc.world, mc.player);
-        if (!exceptMePlayers.isEmpty()) {
-            Vector3f playerBoxColor = new Vector3f(0F, 1F, 0F);
-            for (PlayerEntity _player : exceptMePlayers) {
-                Vec3d playerPos = _player.getPos();
-                Vec3d cameraPos = context.camera().getPos();
-
-                double distance = mc.player.getPos().distanceTo(playerPos);
-                float alpha = Math.max(0.1F, Math.min(1.0F, (float) (1 - (distance / 96D))));
-
-                renderUtils.drawBox(playerPos, _player.getWidth(), _player.getHeight(), cameraPos, playerBoxColor, alpha, true);
-            }
-        }
-
-    }
-
 }
