@@ -19,8 +19,8 @@ public class PepperoniClient implements ClientModInitializer, GuiScreen.ResultCa
     @Override
     public void onInitializeClient() {
         // 初始化 hack 状态
-        hackStatus.put("playerESP", false);
-        hackStatus.put("mobESP", false);
+        hackStatus.put("playerESP", true);
+        hackStatus.put("mobESP", true);
 
         // 注册渲染事件
         WorldRenderEvents.AFTER_TRANSLUCENT.register(this::run);
