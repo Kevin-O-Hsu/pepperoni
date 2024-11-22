@@ -48,13 +48,13 @@ public class ESP {
 
             for (HostileEntity hostile : cachedHostiles) {
                 double distance = mc.player.getPos().distanceTo(hostile.getPos());
-                float alpha = Math.max(0, Math.min(0.2F, (float) ((distance / 96D))));
+                float alpha = Math.max(0, Math.min(0.2F, (float) (1 - (distance / 96D))));
                 hostileAlphaMap.put(hostile, alpha);
             }
 
             for (AbstractClientPlayerEntity player : cachedPlayers) {
                 double distance = mc.player.getPos().distanceTo(player.getPos());
-                float alpha = Math.max(0, Math.min(0.2F, (float) ((distance / 96D))));
+                float alpha = Math.max(0, Math.min(0.2F, (float) (1 - (distance / 96D))));
                 playerAlphaMap.put(player, alpha);
             }
 
