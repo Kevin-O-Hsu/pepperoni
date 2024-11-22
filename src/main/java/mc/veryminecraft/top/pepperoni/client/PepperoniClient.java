@@ -23,7 +23,7 @@ public class PepperoniClient implements ClientModInitializer, GuiScreen.ResultCa
         hackStatus.put("mobESP", true);
 
         // 注册渲染事件
-        WorldRenderEvents.AFTER_TRANSLUCENT.register(this::run);
+        WorldRenderEvents.AFTER_ENTITIES.register(this::run);
 
         // 注册键位事件
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
