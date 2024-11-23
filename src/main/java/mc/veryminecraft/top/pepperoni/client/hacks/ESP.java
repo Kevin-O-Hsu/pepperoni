@@ -5,6 +5,7 @@ import mc.veryminecraft.top.pepperoni.client.utils.RenderUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.util.math.Vec3d;
 import org.joml.Vector3f;
@@ -75,14 +76,13 @@ public class ESP {
         Vec3d cameraPos = context.camera().getPos();
         for (HostileEntity hostile : cachedHostiles) {
             float alpha = hostileAlphaMap.getOrDefault(hostile, 1.0F);
-            renderUtils.drawBox(hostile.getPos(), hostile.getWidth(), hostile.getHeight(),
+            Vec3d interpolatedPos = interpolateEntityPosition(hostile, context.camera().getLastTickDelta());
+            renderUtils.drawBox(interpolatedPos, hostile.getWidth(), hostile.getHeight(),
                     cameraPos, new Vector3f(1F, 0F, 0F), alpha, true);
         }
 
 
     }
-
-
 
 
     private void renderPlayerESP() {
@@ -91,7 +91,8 @@ public class ESP {
         Vec3d cameraPos = context.camera().getPos();
         for (AbstractClientPlayerEntity player : cachedPlayers) {
             float alpha = playerAlphaMap.getOrDefault(player, 1.0F);
-            renderUtils.drawBox(player.getPos(), player.getWidth(), player.getHeight(),
+            Vec3d interpolatedPos = interpolateEntityPosition(player, context.camera().getLastTickDelta());
+            renderUtils.drawBox(interpolatedPos, player.getWidth(), player.getHeight(),
                     cameraPos, new Vector3f(1F, 0F, 0F), alpha, true);
         }
     }
@@ -108,6 +109,17 @@ public class ESP {
 
     public float calculateAlpha(double distance, double maxDistance, float minAlpha, float maxAlpha) {
         return Math.max(minAlpha, Math.min(maxAlpha, (float) (maxAlpha - (distance / maxDistance) * (maxAlpha - minAlpha))));
+    }
+
+    private Vec3d interpolateEntityPosition(Entity entity, float partialTicks) {
+        // 获取实体的前一帧位置
+        Vec3d prevPos = new Vec3d(entity.prevX, entity.prevY, entity.prevZ);
+
+        // 获取实体的当前帧位置
+        Vec3d currentPos = entity.getPos();
+
+        // 插值计算
+        return prevPos.lerp(currentPos, partialTicks);
     }
 
 

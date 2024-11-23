@@ -13,7 +13,6 @@ import mc.veryminecraft.top.pepperoni.client.hacks.ESP;
 public class PepperoniClient implements ClientModInitializer{
 
     private final MinecraftClient mc = MinecraftClient.getInstance();
-    public WorldRenderContext context = null;
     public ESP esp;
     private boolean initialized = false;
 
@@ -38,7 +37,6 @@ public class PepperoniClient implements ClientModInitializer{
             initialized = true;
         }
 
-        this.context = context;
         this.esp.update();
     }
 
