@@ -7,41 +7,39 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import mc.veryminecraft.top.pepperoni.client.gui.GuiScreen;
 import mc.veryminecraft.top.pepperoni.client.hacks.ESP;
-import java.util.HashMap;
 
 
 
-public class PepperoniClient implements ClientModInitializer, GuiScreen.ResultCallback {
+public class PepperoniClient implements ClientModInitializer{
 
     private final MinecraftClient mc = MinecraftClient.getInstance();
-    private final HashMap<String, Boolean> hackStatus = new HashMap<>();
+    public WorldRenderContext context = null;
+    public ESP esp;
+    private boolean initialized = false;
+
 
     @Override
     public void onInitializeClient() {
-        // 初始化 hack 状态
-        hackStatus.put("playerESP", false);
-        hackStatus.put("mobESP", false);
-
         // 注册渲染事件
         WorldRenderEvents.AFTER_TRANSLUCENT.register(this::run);
 
         // 注册键位事件
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (GuiScreen.toggleScreenKey.wasPressed()) {
-                mc.setScreen(new GuiScreen(this, hackStatus)); // 打开 GuiScreen
+                mc.setScreen(new GuiScreen(this.esp)); // 打开 GuiScreen
             }
         });
     }
 
     public void run(WorldRenderContext context) {
-        // 更新 ESP 状态
-        ESP esp = new ESP(context, hackStatus);
-        esp.update();
+        if (!initialized) {
+            System.out.println("init esp");
+            this.esp = new ESP(context);
+            initialized = true;
+        }
+
+        this.context = context;
+        this.esp.update();
     }
 
-    @Override
-    public void onResult(HashMap<String, Boolean> hackStatus) {
-        // 更新 hack 状态
-        this.hackStatus.putAll(hackStatus);
-    }
 }
