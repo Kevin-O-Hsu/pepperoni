@@ -1,5 +1,6 @@
 package mc.veryminecraft.top.pepperoni.client.gui;
 
+import mc.veryminecraft.top.pepperoni.client.HackList;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -8,7 +9,6 @@ import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.util.InputUtil;
 import net.minecraft.text.Text;
 import org.lwjgl.glfw.GLFW;
-import mc.veryminecraft.top.pepperoni.client.hacks.ESP;
 
 
 
@@ -17,11 +17,10 @@ public class GuiScreen extends Screen {
     public static final KeyBinding toggleScreenKey = new KeyBinding("key.veryminecraft.opensc", InputUtil.Type.KEYSYM, GLFW.GLFW_KEY_PERIOD, "category.veryminecraft");
 
 
-    public GuiScreen(ESP esp) {
+    public GuiScreen(HackList hackList) {
         super(Text.of("GuiScreen"));
-
-        addDrawableChild(ButtonWidget.builder(Text.of("Toggle Player ESP"), (btn) -> esp.togglePlayerESP()).dimensions(100, 100, 200, 20).build());
-        addDrawableChild(ButtonWidget.builder(Text.of("Toggle Mob ESP"), (btn) -> esp.toggleMobESP()).dimensions(100, 130, 200, 20).build());
+        addDrawableChild(ButtonWidget.builder(Text.of("Toggle Mob ESP"), (btn) -> hackList.mobESP.toggleHack()).dimensions(100, 100, 200, 20).build());
+        addDrawableChild(ButtonWidget.builder(Text.of("Toggle Player ESP"), (btn) -> hackList.playerESP.toggleHack()).dimensions(100, 130, 200, 20).build());
     }
 
 
