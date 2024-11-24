@@ -6,15 +6,16 @@ import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.MinecraftClient;
 import mc.veryminecraft.top.pepperoni.client.gui.GuiScreen;
-import mc.veryminecraft.top.pepperoni.client.hacks.ESP;
+import mc.veryminecraft.top.pepperoni.client.hacks.*;
 
 
 
 public class PepperoniClient implements ClientModInitializer{
 
     private final MinecraftClient mc = MinecraftClient.getInstance();
-    public ESP esp;
+    public HackList hackList;
     private boolean initialized = false;
+
 
 
     @Override
@@ -25,19 +26,23 @@ public class PepperoniClient implements ClientModInitializer{
         // 注册键位事件
         ClientTickEvents.END_CLIENT_TICK.register(client -> {
             if (GuiScreen.toggleScreenKey.wasPressed()) {
-                mc.setScreen(new GuiScreen(this.esp)); // 打开 GuiScreen
+                mc.setScreen(new GuiScreen(hackList)); // 打开 GuiScreen
             }
         });
     }
 
-    public void run(WorldRenderContext context) {
+    public void run(WorldRenderContext context){
         if (!initialized) {
             System.out.println("init esp");
-            this.esp = new ESP(context);
+            hackList = new HackList(context);
             initialized = true;
         }
 
-        this.esp.update();
+        for (Object hack : hackList.getAllFieldValues()){
+            if (hack instanceof Hack){
+                ((Hack) hack).update();
+            }
+        }
     }
 
 }
