@@ -5,6 +5,7 @@ import mc.veryminecraft.top.pepperoni.client.utils.RenderUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 
 
@@ -47,7 +48,7 @@ public class Hack {
         return Math.max(minAlpha, Math.min(maxAlpha, (float) (maxAlpha - (distance / maxDistance) * (maxAlpha - minAlpha))));
     }
 
-    public Vec3d interpolateEntityPosition(Entity entity, float partialTicks) {
+    public Vec3d interpolateEntityPosition(Entity entity, float partialTicks, boolean isEyePos) {
         // 获取实体的前一帧位置
         Vec3d prevPos = new Vec3d(entity.prevX, entity.prevY, entity.prevZ);
 
@@ -55,9 +56,19 @@ public class Hack {
         Vec3d currentPos = entity.getPos();
 
         // 插值计算
-        return prevPos.lerp(currentPos, partialTicks);
+
+        Vec3d originPos = prevPos.lerp(currentPos, partialTicks);
+        if (isEyePos) {
+            // 如果是眼睛位置，则需要加上眼睛的高度
+            return originPos.add(0, entity.getEyeHeight(entity.getPose()), 0);
+        } else{
+            return originPos;
+        }
     }
 
+    public Vec3d interpolatePlayerPosition(PlayerEntity player, float partialTicks){
+        return player.getCameraPosVec(partialTicks);
+    }
 
 
 

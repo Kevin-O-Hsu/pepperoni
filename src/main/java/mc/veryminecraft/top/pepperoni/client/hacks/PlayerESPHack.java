@@ -42,7 +42,7 @@ public class PlayerESPHack extends Hack{
         Vec3d cameraPos = context.camera().getPos();
         for (AbstractClientPlayerEntity player : cachedPlayers) {
             float alpha = playerAlphaMap.getOrDefault(player, 1.0F);
-            Vec3d interpolatedPos = interpolateEntityPosition(player, context.camera().getLastTickDelta());
+            Vec3d interpolatedPos = interpolateEntityPosition(player, context.camera().getLastTickDelta(), false);
             renderUtils.drawBox(interpolatedPos, player.getWidth(), player.getHeight(),
                     cameraPos, new Vector3f(1F, 0F, 0F), alpha, true);
         }
