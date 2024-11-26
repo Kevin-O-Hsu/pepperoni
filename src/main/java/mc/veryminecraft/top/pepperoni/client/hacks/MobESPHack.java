@@ -42,7 +42,7 @@ public class MobESPHack extends Hack{
         Vec3d cameraPos = context.camera().getPos();
         for (HostileEntity hostile : cachedHostiles) {
             float alpha = hostileAlphaMap.getOrDefault(hostile, 1.0F);
-            Vec3d interpolatedPos = interpolateEntityPosition(hostile, context.camera().getLastTickDelta());
+            Vec3d interpolatedPos = interpolateEntityPosition(hostile, context.camera().getLastTickDelta(), false);
             renderUtils.drawBox(interpolatedPos, hostile.getWidth(), hostile.getHeight(),
                     cameraPos, new Vector3f(1F, 0F, 0F), alpha, true);
         }
