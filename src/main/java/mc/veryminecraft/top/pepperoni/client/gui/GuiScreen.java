@@ -22,6 +22,7 @@ public class GuiScreen extends Screen {
         addDrawableChild(ButtonWidget.builder(Text.of("Toggle Mob ESP"), (btn) -> hackList.mobESP.toggleHack()).dimensions(100, 100, 200, 20).build());
         addDrawableChild(ButtonWidget.builder(Text.of("Toggle Player ESP"), (btn) -> hackList.playerESP.toggleHack()).dimensions(100, 130, 200, 20).build());
         addDrawableChild(ButtonWidget.builder(Text.of("Toggle Aim nearby Monster"), (btn) -> hackList.aimNearbyMonster.toggleHack()).dimensions(100, 160, 200, 20).build());
+        addDrawableChild(ButtonWidget.builder(Text.of("Toggle Aim nearby Player"), (btn) -> hackList.aimNearbyPlayer.toggleHack()).dimensions(100, 190, 200, 20).build());
     }
 
 

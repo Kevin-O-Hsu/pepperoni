@@ -2,6 +2,8 @@ package mc.veryminecraft.top.pepperoni.client.utils;
 
 import net.minecraft.client.gl.ShaderProgramKeys;
 import net.minecraft.client.render.*;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.util.math.Vec3d;
 import com.mojang.blaze3d.systems.RenderSystem;
 import org.joml.Vector3f;
@@ -136,6 +138,28 @@ public class RenderUtils {
         BufferRenderer.drawWithGlobalProgram(buffer.end());  // 绘制顶点数据
         RenderSystem.disableBlend();      // 禁用透明度混合，防止影响后续渲染
         RenderSystem.enableDepthTest();   // 重新启用深度测试
+    }
+
+    public static Vec3d interpolateEntityPosition(Entity entity, float partialTicks, boolean isEyePos) {
+        // 获取实体的前一帧位置
+        Vec3d prevPos = new Vec3d(entity.prevX, entity.prevY, entity.prevZ);
+
+        // 获取实体的当前帧位置
+        Vec3d currentPos = entity.getPos();
+
+        // 插值计算
+
+        Vec3d originPos = prevPos.lerp(currentPos, partialTicks);
+        if (isEyePos) {
+            // 如果是眼睛位置，则需要加上眼睛的高度
+            return originPos.add(0, entity.getEyeHeight(entity.getPose()), 0);
+        } else{
+            return originPos;
+        }
+    }
+
+    public static Vec3d interpolatePlayerPosition(PlayerEntity player, float partialTicks){
+        return player.getCameraPosVec(partialTicks);
     }
 
 

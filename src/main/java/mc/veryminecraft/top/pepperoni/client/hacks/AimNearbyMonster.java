@@ -3,7 +3,6 @@ package mc.veryminecraft.top.pepperoni.client.hacks;
 import mc.veryminecraft.top.pepperoni.client.utils.Aim;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.entity.mob.HostileEntity;
-import net.minecraft.util.math.Vec3d;
 
 public class AimNearbyMonster extends Hack{
 
@@ -47,12 +46,7 @@ public class AimNearbyMonster extends Hack{
             return;
         }
 
-        Vec3d interpolatedPos = interpolateEntityPosition(nearestHostile, context.camera().getLastTickDelta(), true);
-        Vec3d interpolatedPlayerPos = interpolatePlayerPosition(mc.player, context.camera().getLastTickDelta());
-
-
-        Aim.adjustPlayerYawView(mc.player, Aim.calculateRelativeYaw(interpolatedPlayerPos, interpolatedPos));
-        Aim.adjustPlayerPitchView(mc.player, Aim.calculateRelativePitch(interpolatedPlayerPos, interpolatedPos));
+        Aim.lookAt(mc.player, nearestHostile, context);
 
     }
 
