@@ -1,5 +1,6 @@
 package mc.veryminecraft.top.pepperoni.client.hacks;
 
+import mc.veryminecraft.top.pepperoni.client.utils.RenderUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.entity.mob.HostileEntity;
 import net.minecraft.util.math.Vec3d;
@@ -42,7 +43,7 @@ public class MobESPHack extends Hack{
         Vec3d cameraPos = context.camera().getPos();
         for (HostileEntity hostile : cachedHostiles) {
             float alpha = hostileAlphaMap.getOrDefault(hostile, 1.0F);
-            Vec3d interpolatedPos = interpolateEntityPosition(hostile, context.camera().getLastTickDelta(), false);
+            Vec3d interpolatedPos = RenderUtils.interpolateEntityPosition(hostile, context.camera().getLastTickDelta(), false);
             renderUtils.drawBox(interpolatedPos, hostile.getWidth(), hostile.getHeight(),
                     cameraPos, new Vector3f(1F, 0F, 0F), alpha, true);
         }

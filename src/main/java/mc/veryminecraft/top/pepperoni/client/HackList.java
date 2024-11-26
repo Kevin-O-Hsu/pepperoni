@@ -12,12 +12,14 @@ public class HackList {
     public MobESPHack mobESP;
     public PlayerESPHack playerESP;
     public AimNearbyMonster aimNearbyMonster;
+    public AimNearbyPlayer aimNearbyPlayer;
 
 
     public HackList(WorldRenderContext ctx){
         playerESP = new PlayerESPHack(ctx);
         mobESP = new MobESPHack(ctx);
         aimNearbyMonster = new AimNearbyMonster(ctx);
+        aimNearbyPlayer = new AimNearbyPlayer(ctx);
     }
 
     public List<Object> getAllFieldValues(){

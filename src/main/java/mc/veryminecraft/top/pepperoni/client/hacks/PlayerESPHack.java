@@ -1,5 +1,6 @@
 package mc.veryminecraft.top.pepperoni.client.hacks;
 
+import mc.veryminecraft.top.pepperoni.client.utils.RenderUtils;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.util.math.Vec3d;
@@ -42,7 +43,7 @@ public class PlayerESPHack extends Hack{
         Vec3d cameraPos = context.camera().getPos();
         for (AbstractClientPlayerEntity player : cachedPlayers) {
             float alpha = playerAlphaMap.getOrDefault(player, 1.0F);
-            Vec3d interpolatedPos = interpolateEntityPosition(player, context.camera().getLastTickDelta(), false);
+            Vec3d interpolatedPos = RenderUtils.interpolateEntityPosition(player, context.camera().getLastTickDelta(), false);
             renderUtils.drawBox(interpolatedPos, player.getWidth(), player.getHeight(),
                     cameraPos, new Vector3f(1F, 0F, 0F), alpha, true);
         }

@@ -1,6 +1,8 @@
 package mc.veryminecraft.top.pepperoni.client.utils;
 
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.math.Vec3d;
 
 public class Aim {
@@ -64,5 +66,15 @@ public class Aim {
         return pitchDegrees;
     }
 
+
+
+    public static void lookAt(ClientPlayerEntity player, Entity entity, WorldRenderContext context){
+        Vec3d interpolatedPos = RenderUtils.interpolateEntityPosition(entity, context.camera().getLastTickDelta(), true);
+        Vec3d interpolatedPlayerPos = RenderUtils.interpolatePlayerPosition(player, context.camera().getLastTickDelta());
+
+
+        Aim.adjustPlayerYawView(player, Aim.calculateRelativeYaw(interpolatedPlayerPos, interpolatedPos));
+        Aim.adjustPlayerPitchView(player, Aim.calculateRelativePitch(interpolatedPlayerPos, interpolatedPos));
+    }
 
 }
