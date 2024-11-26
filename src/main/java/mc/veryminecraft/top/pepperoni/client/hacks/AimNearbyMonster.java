@@ -8,11 +8,11 @@ import net.minecraft.util.math.Vec3d;
 public class AimNearbyMonster extends Hack{
 
     private HostileEntity nearestHostile = null;
-    public boolean onHack = false;
 
 
     public AimNearbyMonster(WorldRenderContext ctx) {
         super(ctx);
+        onHack = false;
     }
 
     @Override
