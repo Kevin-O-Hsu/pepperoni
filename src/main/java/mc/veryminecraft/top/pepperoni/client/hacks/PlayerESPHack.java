@@ -45,7 +45,7 @@ public class PlayerESPHack extends Hack{
             float alpha = playerAlphaMap.getOrDefault(player, 1.0F);
             Vec3d interpolatedPos = RenderUtils.interpolateEntityPosition(player, context.camera().getLastTickDelta(), false);
             renderUtils.drawBox(interpolatedPos, player.getWidth(), player.getHeight(),
-                    cameraPos, new Vector3f(1F, 0F, 0F), alpha, true);
+                    cameraPos, new Vector3f(0F, 1F, 0F), alpha, true);
         }
     }
 

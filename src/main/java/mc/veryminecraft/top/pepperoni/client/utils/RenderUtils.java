@@ -142,7 +142,7 @@ public class RenderUtils {
 
     public static Vec3d interpolateEntityPosition(Entity entity, float partialTicks, boolean isEyePos) {
         // 获取实体的前一帧位置
-        Vec3d prevPos = new Vec3d(entity.prevX, entity.prevY, entity.prevZ);
+        Vec3d prevPos = new Vec3d(entity.lastRenderX, entity.lastRenderY, entity.lastRenderZ);
 
         // 获取实体的当前帧位置
         Vec3d currentPos = entity.getPos();
