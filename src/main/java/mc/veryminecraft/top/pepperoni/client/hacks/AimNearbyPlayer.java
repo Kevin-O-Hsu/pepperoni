@@ -47,7 +47,7 @@ public class AimNearbyPlayer extends Hack{
             return;
         }
 
-        Aim.lookAt(mc.player, nearestPlayer, context);
+        Aim.lookAt(mc.player, nearestPlayer, context, false);
         
     }
 

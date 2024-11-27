@@ -68,13 +68,47 @@ public class Aim {
 
 
 
-    public static void lookAt(ClientPlayerEntity player, Entity entity, WorldRenderContext context){
-        Vec3d interpolatedPos = RenderUtils.interpolateEntityPosition(entity, context.camera().getLastTickDelta(), true);
-        Vec3d interpolatedPlayerPos = RenderUtils.interpolatePlayerPosition(player, context.camera().getLastTickDelta());
+    public static void lookAt(ClientPlayerEntity player, Entity entity, WorldRenderContext context, boolean vertical){
+        float tickDelta = context.camera().getLastTickDelta();
+        
+        Vec3d interpolatedPos = RenderUtils.interpolateEntityPosition(entity, tickDelta, true);
+        Vec3d interpolatedPlayerCameraPos = RenderUtils.interpolatePlayerPosition(player, tickDelta);
 
+        Vec3d interpolatedPlayerPos = RenderUtils.interpolateEntityPosition(player, tickDelta, false);
+        
+        double lastTickPlayerEyeY = player.lastRenderY + player.getEyeHeight(entity.getPose());
+        double currentTickPlayerEyeY = player.getEyeY();
+        double interpolatedPlayerEyeY = lastTickPlayerEyeY + ((currentTickPlayerEyeY - lastTickPlayerEyeY) * tickDelta);
+        Vec3d interpolatedPlayerEyePos = new Vec3d(interpolatedPlayerPos.x, interpolatedPlayerEyeY, interpolatedPlayerPos.z);
+        
+        if (vertical){
+            Aim.adjustPlayerYawView(player, Aim.calculateRelativeYaw(interpolatedPlayerCameraPos, interpolatedPos));
+            Aim.adjustPlayerPitchView(player, Aim.calculateRelativePitch(interpolatedPlayerCameraPos, interpolatedPos));
 
-        Aim.adjustPlayerYawView(player, Aim.calculateRelativeYaw(interpolatedPlayerPos, interpolatedPos));
-        Aim.adjustPlayerPitchView(player, Aim.calculateRelativePitch(interpolatedPlayerPos, interpolatedPos));
+        } else {
+            Vec3d entityPos = RenderUtils.interpolateEntityPosition(entity, tickDelta, false);
+            Vec3d entityHeadPos = new Vec3d(entityPos.x, entityPos.y + entity.getHeight(), entityPos.z);
+
+            if ((entityPos.getY() <= currentTickPlayerEyeY) && (entityHeadPos.getY() >= currentTickPlayerEyeY)){
+                    Aim.adjustPlayerPitchView(player, 0);
+            } else if (entityPos.getY() > interpolatedPlayerEyeY){
+                Aim.adjustPlayerPitchView(player, (float) (-1 * Math.toDegrees(Math.asin(
+                        (entityPos.getY() - interpolatedPlayerEyeY) / interpolatedPlayerEyePos.distanceTo(entityPos))))
+                );
+            } else if (entityHeadPos.getY() < interpolatedPlayerEyeY) {
+                Aim.adjustPlayerPitchView(player, (float) (90 - (Math.toDegrees(Math.acos(
+                        (interpolatedPlayerEyeY - entityHeadPos.getY()) / (interpolatedPlayerEyePos.distanceTo(entityHeadPos)))
+                ))));
+            }
+            Aim.adjustPlayerYawView(player, Aim.calculateRelativeYaw(interpolatedPlayerPos, interpolatedPos));
+
+        }
     }
+
+
+
+
+
+
 
 }
