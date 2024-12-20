@@ -3,11 +3,11 @@ name: Build with Gradle using Zulu JDK 21 and upload artifacts
 # 触发条件：推送代码或拉取请求时触发构建，仅针对 master 分支
 on:
   push:
-    branches:
-      - master
+    branches: # 对所有分支生效
+      - '**'
   pull_request:
-    branches:
-      - master
+    branches: # 对所有分支生效
+      - '**'
 
 jobs:
   build:
