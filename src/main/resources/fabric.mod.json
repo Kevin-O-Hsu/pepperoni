@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "id": "pepperoni_1214",
+  "version": "${version}",
+  "name": "pepperoni_1214",
+  "description": "A useful \"hack \" mod for Minecraft Survival",
+  "authors": [],
+  "contact": {},
+  "license": "GPL-3.0",
+  "icon": "icon.png",
+  "environment": "client",
+  "entrypoints": {
+    "client": [
+      "mc.veryminecraft.top.pepperoni_1214.client.Pepperoni_1214Client"
+    ],
+    "main": [
+      "mc.veryminecraft.top.pepperoni_1214.Pepperoni_1214"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}
